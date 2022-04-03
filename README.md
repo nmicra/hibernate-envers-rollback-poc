@@ -7,6 +7,6 @@ for psql
 `docker run -it --rm --link rollbackdb postgres psql -h rollbackdb -U sa -d rollbackdb`
 
 ### * to run docker-compose
-`gradle jibDockerBuild --image=enverspoc
-docker-compose up -d
-docker run -it --rm --network=hibernate-envers-rollback-poc_default --link hibernate-envers-rollback-poc_rollbackdb_1 postgres psql -h rollbackdb -U sa -d rollbackdb`
+`gradle jibDockerBuild --image=enverspoc`
+`docker-compose up -d`
+`docker run -it --rm --network=hibernate-envers-rollback-poc_default --link hibernate-envers-rollback-poc_rollbackdb_1 postgres psql -h rollbackdb -U sa -d rollbackdb`
