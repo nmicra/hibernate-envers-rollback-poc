@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="add_sequence" author="NN">
+        <createSequence sequenceName="SEQ_ORDERS" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="customer_entity" author="NN">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="customer"/>
+            </not>
+        </preConditions>
+        <createTable tableName="customer">
+            <!--<column name="id" type="bigint" defaultValueComputed="nextval('seq_orders')">
+                <constraints primaryKey="true"/>
+            </column>-->
+            <column name="customer_id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="path" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_customer_id" type="uuid"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="subscriber_entity" author="NN">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="subscriber"/>
+            </not>
+        </preConditions>
+        <createTable tableName="subscriber">
+           <!-- <column name="id" type="bigint" defaultValueComputed="nextval('seq_orders')">
+                <constraints primaryKey="true"/>
+            </column>-->
+            <column name="subscriber_id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_date" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="balance" type="bigint"/>
+            <column name="path" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_subscriber_customer" references="customer(customer_id)"/>
+            </column>
+        </createTable>
+        <createIndex indexName="idx_customer_path" tableName="subscriber">
+            <column name="customer_id"/>
+            <column name="path"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="rollback_log_entity" author="NN">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="rollback_log"/>
+            </not>
+        </preConditions>
+        <createTable tableName="rollback_log">
+            <column name="id" type="bigint" defaultValueComputed="nextval('seq_orders')">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="action_id" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="sql_statement" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!--<changeSet id="create_customers" author="NN">
+        <sqlFile encoding="UTF-8" path="create_customers.sql" relativeToChangelogFile="true"/>
+        <sqlFile encoding="UTF-8" path="create_subscribers.sql" relativeToChangelogFile="true"/>
+    </changeSet>-->
+
+</databaseChangeLog>
